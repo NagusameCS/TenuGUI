@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser editor — TenuGUI</title>
+  <meta name="description" content="Drag the TenuGUI browser button to your bookmarks bar and open the full direct editor on any page.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/mark-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/brand/favicon-32.png">
+  <script>
+    (() => {
+      const fonts = document.createElement("link");
+      fonts.rel = "stylesheet";
+      fonts.href = location.protocol === "file:" ? "assets/css/offline-fonts.css" : "assets/css/fonts.css";
+      document.head.appendChild(fonts);
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <script>
+    try {
+      const stored = localStorage.getItem("tenugui:mode");
+      document.documentElement.dataset.theme = stored === "dark" ? "dark" : "light";
+    } catch (_) {}
+  </script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--canvas);
+      color: var(--text);
+      font-family: var(--font-body);
+    }
+    main {
+      width: min(760px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 52px 0 72px;
+    }
+    .back {
+      display: inline-flex;
+      color: var(--secondary);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .back:hover { color: var(--accent); }
+    h1 {
+      margin: 48px 0 14px;
+      font-family: var(--font-brand);
+      font-size: clamp(2.2rem, 7vw, 4.4rem);
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+    }
+    .lede {
+      max-width: 54ch;
+      margin: 0 0 32px;
+      color: var(--secondary);
+      line-height: 1.65;
+    }
+    .bm-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 22px;
+      border: 2px solid var(--accent);
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 500;
+      text-decoration: none;
+      cursor: grab;
+      user-select: none;
+    }
+    .bm-button:active { cursor: grabbing; }
+    .bm-button:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+    .bm-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 22px;
+    }
+    .bm-copy {
+      min-height: 44px;
+      padding: 0 16px;
+      border: var(--border-w) solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .bm-copy:hover { border-color: var(--accent); color: var(--accent); }
+    .note {
+      max-width: 58ch;
+      margin: 0 0 26px;
+      color: var(--placeholder);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      line-height: 1.6;
+    }
+    .steps {
+      display: grid;
+      gap: 16px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: step;
+    }
+    .steps li {
+      position: relative;
+      padding-left: 42px;
+      color: var(--secondary);
+      line-height: 1.6;
+      counter-increment: step;
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 1px;
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+    }
+    code {
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: var(--surface);
+      font-family: var(--font-mono);
+      font-size: 0.86em;
+    }
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--elevated);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 120ms ease, transform 120ms ease;
+      pointer-events: none;
+    }
+    .toast.is-visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="index.html#install">← TenuGUI</a>
+    <h1>Edit any page<br>in place.</h1>
+    <p class="lede">Drag this button to your bookmarks bar. No server or extension. On any page, click the bookmark to open the direct editor: select elements, edit text, change styles, move or delete things, then download the edited HTML.</p>
+
+    <div class="bm-row">
+      <a class="bm-button" id="bm-link" href="#" draggable="true" rel="nofollow" aria-disabled="true">TenuGUI · edit this page</a>
+      <button class="bm-copy" id="bm-copy" type="button" disabled>Loading editor…</button>
+    </div>
+    <p class="note">The editor is embedded in the bookmarklet. No server, account or extension. It edits the page in front of you using that page's own CSS and HTML; it does not inject TenuGUI textures, content.json or MCP state. Sites with a strict content security policy can block bookmarklets.</p>
+
+    <ol class="steps">
+      <li>Make sure the bookmarks bar is visible in your browser.</li>
+      <li>Drag the <strong>TenuGUI · edit this page</strong> button onto the bar.</li>
+      <li>Open any page, click the bookmark, then click elements to select them. Drag to move; double-click text to edit.</li>
+      <li>Use the inspector for text, colours, spacing, links and images.</li>
+      <li>Use <strong>Export HTML</strong> in the TenuGUI bar when you are done.</li>
+    </ol>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/anywhere-source.js"></script>
+  <script>
+    (() => {
+      const link = document.getElementById("bm-link");
+      const button = document.getElementById("bm-copy");
+      const toast = document.getElementById("toast");
+      let timer;
+      const notify = (message) => {
+        toast.textContent = message;
+        toast.classList.add("is-visible");
+        clearTimeout(timer);
+        timer = setTimeout(() => toast.classList.remove("is-visible"), 1800);
+      };
+      const source = window.__TENUGUI_ANYWHERE_SOURCE;
+      let href = "";
+      if (source) {
+        href = "javascript:" + encodeURIComponent(source);
+        link.href = href;
+        link.removeAttribute("aria-disabled");
+        button.disabled = false;
+        button.textContent = "Copy bookmarklet";
+      } else {
+        button.textContent = "Editor unavailable";
+        notify("Rebuild the browser editor source.");
+      }
+      button.addEventListener("click", async () => {
+        if (!href) return;
+        try {
+          await navigator.clipboard.writeText(href);
+          notify("Bookmarklet copied. Paste it as a bookmark URL.");
+        } catch {
+          notify("Select the button and drag it to your bookmarks bar.");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

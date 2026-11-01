@@ -1,0 +1,22 @@
+{
+  "name": "tenugui-site",
+  "private": false,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A direct editor for static pages. Edit in place, export content.json.",
+  "scripts": {
+    "assets": "python3 tools/build-assets.py && ./tools/build-fonts.sh",
+    "content": "node tools/export-content.mjs",
+    "icons": "node tools/export-icons.mjs",
+    "serve": "python3 -m http.server 4173",
+    "mcp": "node tools/mcp-server.mjs",
+    "bundle": "npx --yes esbuild assets/js/app.js --bundle --format=iife --target=es2020 --minify --outfile=assets/js/app.bundle.js",
+    "anywhere-source": "node tools/build-anywhere-source.mjs",
+    "build": "npm run offline-fonts && npm run anywhere-source && npm run bundle",
+    "offline-fonts": "node tools/build-offline-fonts.mjs"
+  },
+  "license": "MIT",
+  "bin": {
+    "tenugui-mcp": "tools/mcp-server.mjs"
+  }
+}

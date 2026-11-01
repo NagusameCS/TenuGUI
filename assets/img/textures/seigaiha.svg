@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- Validated W3C 2014-03-02 -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="700" height="700" id="svg2" viewBox="0 0 700 700">
+	<title>Seigaiha</title>
+	<defs>
+		<g id="C1">
+			<path d="M 1,210 V 100 A 98,98 0 0 1 100,1 98,98 0 0 1 199,100 V 210" style="fill:white;stroke:black;stroke-width:2" />
+			<path d="M 175,210 V 100 A 75,75 0 0 0 100,25 75,75 0 0 0 25,100 V 210" style="fill:white;stroke:black;stroke-width:1" />
+		</g>
+	</defs>
+	<g id="C4">
+		<use xlink:href="#C1" />
+		<use xlink:href="#C1" transform="translate(200,0)" />
+		<use xlink:href="#C1" transform="translate(400,0)" />
+		<use xlink:href="#C1" transform="translate(600,0)" />
+	</g>
+	<use xlink:href="#C4" transform="translate(-100,100)" />
+	<use xlink:href="#C4" transform="translate(0,200)" />
+	<use xlink:href="#C4" transform="translate(-100,300)" />
+	<use xlink:href="#C4" transform="translate(0,400)" />
+	<use xlink:href="#C4" transform="translate(-100,500)" />
+	<use xlink:href="#C4" transform="translate(0,600)" />
+</svg>

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TenuGUI — Edit in place</title>
+  <meta name="description" content="A browser editor for any page. Edit in place, then export the changed HTML. No install or server.">
+  <meta name="author" content="TenuGUI">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F3EEE4">
+  <meta name="theme-color" content="#11100E" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F3EEE4" media="(prefers-color-scheme: light)">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TenuGUI — Edit in place">
+  <meta property="og:description" content="Edit any page in place, then export the changed HTML. No install or server.">
+  <meta property="og:image" content="assets/img/social/og-light.png">
+  <meta property="og:image:alt" content="TenuGUI — Edit in place.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="TenuGUI — Edit in place">
+  <meta name="twitter:description" content="Edit any page in place. No install, extension or account.">
+  <meta name="twitter:image" content="assets/img/social/og-light.png">
+  <meta name="twitter:image:alt" content="TenuGUI — Edit in place.">
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/mark-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/brand/favicon-16.png">
+  <link rel="shortcut icon" href="assets/img/brand/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/brand/favicon-180.png">
+  <link rel="manifest" href="site.webmanifest">
+
+  <script>
+    (() => {
+      const offline = location.protocol === "file:";
+      if (!offline) {
+        for (const [href, type] of [
+          ["assets/fonts/dela-gothic.woff2", "woff2"],
+          ["assets/fonts/inter-400.woff2", "woff2"],
+        ]) {
+          const preload = document.createElement("link");
+          preload.rel = "preload";
+          preload.as = "font";
+          preload.type = `font/${type}`;
+          preload.crossOrigin = "anonymous";
+          preload.href = href;
+          document.head.appendChild(preload);
+        }
+      }
+      const fonts = document.createElement("link");
+      fonts.rel = "stylesheet";
+      fonts.href = offline ? "assets/css/offline-fonts.css" : "assets/css/fonts.css";
+      document.head.appendChild(fonts);
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/tokens.css?v=29">
+  <link rel="stylesheet" href="assets/css/site.css?v=29">
+  <link rel="stylesheet" href="assets/css/editor.css?v=29">
+
+  <script>
+    // Paint the right mode before CSS loads; the editor applies custom tokens later.
+    (() => {
+      try {
+        const stored = localStorage.getItem("tenugui:mode");
+        document.documentElement.dataset.theme = stored === "dark" ? "dark" : "light";
+      } catch (_) {}
+    })();
+  </script>
+  <script defer src="assets/js/app.bundle.js?v=29"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="site" id="site" data-background="none">
+    <header class="site-header" id="site-header"></header>
+    <main id="main" tabindex="-1">
+      <noscript>
+        <div class="no-script wrap">
+          <p class="eyebrow">TenuGUI · 手拭い</p>
+          <h1>Edit what you see.</h1>
+          <p>A browser editor for any page.</p>
+          <p>Enable JavaScript for the live demo, or <a href="bookmarklet.html">open the browser editor</a>.</p>
+        </div>
+      </noscript>
+    </main>
+    <footer class="site-footer" id="site-footer"></footer>
+  </div>
+
+  <div id="editor-ui"></div>
+  <div id="dialog-root"></div>
+  <div id="toast-region" class="toast-region" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="sr-live" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+</body>
+</html>

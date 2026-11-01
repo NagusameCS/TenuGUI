@@ -1,0 +1,21 @@
+{
+  "name": "TenuGUI \u2014 Edit in place",
+  "short_name": "TenuGUI",
+  "description": "A browser editor for any page. Edit in place and export the changed HTML.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F3EEE4",
+  "theme_color": "#F3EEE4",
+  "icons": [
+    {
+      "src": "assets/img/brand/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/brand/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

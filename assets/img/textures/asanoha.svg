@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" width="503" height="501" viewBox="0 0 503 501">
+<style type="text/css">
+	.st0{fill:none;stroke:#000;stroke-linecap:round;}
+	.st1{fill:none;stroke:#000;}
+</style>
+<symbol  id="grid" viewBox="-50.5 -50.5 101 101">
+	<line class="st0" x1="0" y1="50" x2="0" y2="-15"/>
+	<line class="st0" x1="0" y1="50" x2="-50" y2="15"/>
+	<line class="st0" x1="0" y1="50" x2="50" y2="15"/>
+	<line class="st0" x1="0" y1="50" x2="-50" y2="-50"/>
+	<line class="st0" x1="0" y1="50" x2="50" y2="-50"/>
+	<line class="st1" x1="0" y1="-15" x2="-50" y2="-50"/>
+	<line class="st1" x1="0" y1="-15" x2="50" y2="-50"/>
+	<line class="st1" x1="50" y1="15" x2="50" y2="-50"/>
+</symbol>
+<line class="st1" x1="0.5" y1="100.5" x2="500.5" y2="100.5"/>
+<line class="st1" x1="0.5" y1="200.5" x2="500.5" y2="200.5"/>
+<line class="st1" x1="0.5" y1="300.5" x2="500.5" y2="300.5"/>
+<line class="st1" x1="0.5" y1="400.5" x2="500.5" y2="400.5"/>
+<line class="st1" x1="100.5" y1="35.5" x2="100.5" y2="100.5"/>
+<line class="st1" x1="0.5" y1="300.5" x2="500.5" y2="300.5"/>
+<use xlink:href="#grid"  width="101" height="101" id="XMLID_1_" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 50.5 50.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 151 50.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 251.5 50.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 352 50.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 452.5 50.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 50.5 150.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 151 150.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 251.5 150.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 352 150.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 452.5 150.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 50.5 250.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 151 250.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 251.5 250.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 352 250.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 452.5 250.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 50.5 450.5048)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 151 450.5048)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 251.5 450.5048)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 352 450.5048)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 -1 452.5 450.5048)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 50.5 350.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 151 350.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 251.5 350.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 352 350.5)" style="overflow:visible;"/>
+<use xlink:href="#grid"  width="101" height="101" x="-50.5" y="-50.5" transform="matrix(1 0 0 1 452.5 350.5)" style="overflow:visible;"/>
+</svg>

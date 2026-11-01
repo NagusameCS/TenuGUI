@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- Validated W3C 2014-03-02 -->
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="600" height="520" id="svg2" viewBox="0 0 600 520">
+	<title>Kagome</title>
+	<g style="fill:none;stroke:black;stroke-width:2;stroke-linecap:round;stroke-linejoin:round">
+		<path d="M 0,415.69219 60,519.61524 M 0,311.76914 120,519.61524 M 0,207.8461 180,519.61524 M 0,103.92305 240,519.61524 M 0,0 300,519.61524 M 60,0 360,519.61524 M 120,0 420,519.61524 M 180,0 480,519.61524 M 240,0 540,519.61524 M 300,0 600,519.61524 M 360,0 600,415.69219 M 420,0 600,311.76914 M 480,0 600,207.8461 M 540,0 600,103.92305" id="D01" />
+		<use xlink:href="#D01" transform="matrix(-1,0,0,1,600,0)" />
+		<path d="M 0,25.98076 H 600 M 0,77.94229 H 600 M 0,129.90381 H 600 M 0,181.86533 H 600 M 0,233.82686 H 600 M 0,285.78838 H 600 M 0,337.74991 H 600 M 0,389.71143 H 600 M 0,441.67295 H 600 M 0,493.63448 H 600" />
+	</g>
+</svg>

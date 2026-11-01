@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — TenuGUI</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="assets/img/brand/mark-favicon.svg">
+  <link rel="icon" href="assets/img/brand/favicon-32.png" sizes="32x32">
+  <script>
+    try { document.documentElement.dataset.theme = localStorage.getItem("tenugui:mode") === "dark" ? "dark" : "light"; } catch (_) {}
+  </script>
+  <style>
+    :root {
+      --canvas: #f3eee4; --text: #211e19; --secondary: #6f6659; --border: #d8d0c2; --accent: #b0442a; --accent-ink: #fff9f0;
+      --font-brand: "Dela Gothic One", "Hiragino Sans", system-ui, sans-serif;
+      --font-body: Inter, system-ui, sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+    html[data-theme="dark"] {
+      --canvas: #11100e; --text: #f4f0e6; --secondary: #b9b2a5; --border: #35322c; --accent: #e0673f; --accent-ink: #1a0e09;
+    }
+    @font-face { font-family: "Dela Gothic One"; src: url("assets/fonts/dela-gothic.woff2") format("woff2"); font-display: swap; }
+    @font-face { font-family: "Inter"; src: url("assets/fonts/inter-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/plex-mono-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 32px;
+      background: var(--canvas); color: var(--text); font-family: var(--font-body);
+    }
+    main { width: min(620px, 100%); }
+    .mark { width: 44px; height: 44px; overflow: visible; background: none; padding: 0; }
+    .mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    html[data-theme="light"] .mark img[src$="mark-dark-512.png"] { filter: invert(1); }
+    h1 { font-size: clamp(2.6rem, 8vw, 4.4rem); line-height: .96; letter-spacing: -.045em; margin: 40px 0 18px; }
+    p { color: var(--secondary); line-height: 1.65; margin: 0 0 28px; max-width: 44ch; }
+    a { display: inline-flex; align-items: center; gap: 8px; padding: 11px 18px; border-radius: 2px; background: var(--accent); color: var(--accent-ink); text-decoration: none; font-size: .9rem; font-weight: 500; }
+    a:hover { filter: brightness(1.08); }
+    .meta { margin-top: 44px; color: var(--secondary); font-family: var(--font-mono); font-size: .64rem; letter-spacing: .04em; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="mark"><img src="assets/img/brand/mark-dark-512.png" alt="TenuGUI"></div>
+    <h1>That page isn’t here.</h1>
+    <p>The address may have changed, or the link is incomplete. The editor and source are on the main page.</p>
+    <a href="index.html">Return to TenuGUI</a>
+    <div class="meta">TENUGUI / 手拭い — 404</div>
+  </main>
+</body>
+</html>
