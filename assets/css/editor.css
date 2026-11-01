@@ -269,6 +269,75 @@ body.is-dragging * {
   font-family: var(--editor-ui-font);
   max-width: calc(100vw - 16px);
   flex-wrap: wrap;
+  pointer-events: none;
+}
+.edit-toolbar .et-crumb,
+.edit-toolbar .et-btn {
+  pointer-events: auto;
+}
+
+.resize-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 445;
+  pointer-events: none;
+}
+.resize-handle {
+  position: fixed;
+  display: block;
+  transform: translate(-50%, -50%);
+  border: var(--border-w) solid var(--accent);
+  border-radius: 2px;
+  background: var(--elevated);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+  pointer-events: auto;
+  touch-action: none;
+}
+.resize-handle[data-resize="e"] {
+  width: 7px;
+  height: 20px;
+  cursor: ew-resize;
+}
+.resize-handle[data-resize="s"] {
+  width: 20px;
+  height: 7px;
+  cursor: ns-resize;
+}
+.resize-handle[data-resize="se"] {
+  width: 11px;
+  height: 11px;
+  cursor: nwse-resize;
+}
+body.is-resizing,
+body.is-resizing * {
+  user-select: none !important;
+}
+
+.snap-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 430;
+  pointer-events: none;
+}
+.snap-guide {
+  position: fixed;
+  display: block;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+  opacity: 0.9;
+}
+.snap-guide[hidden] {
+  display: none;
+}
+.snap-guide[data-snap-x] {
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+.snap-guide[data-snap-y] {
+  left: 0;
+  right: 0;
+  height: 1px;
 }
 .et-crumbs {
   display: flex;

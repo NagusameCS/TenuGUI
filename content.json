@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "publishedAt": 1793556614976,
-  "updatedAt": 1793556614976,
+  "updatedAt": 1793557185197,
   "meta": {
     "title": "TenuGUI — Edit in place",
     "description": "A browser editor for any page. Edit in place, then export the changed HTML. No install or server."
@@ -129,7 +129,7 @@
       "lg": 10
     },
     "borderWidth": 1,
-    "texture": "uroko",
+    "texture": "kagome",
     "type": {
       "brand": "'Dela Gothic One', 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif",
       "body": "Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",
@@ -261,9 +261,77 @@
       "copyright": "© 2026 TenuGUI"
     }
   },
-  "text": {},
-  "styles": {},
-  "nodeState": {},
+  "text": {
+    "features.title": "Riddiculously easy",
+    "feature.style.title": "Preview",
+    "install.title": "Use it nearly* anywhere",
+    "try.body": "Use this page like a demo. Change anything, then export content.json and commit it to update the source. You can literally change anything"
+  },
+  "styles": {
+    "install.title": {
+      "base": {
+        "maxWidth": 90
+      }
+    }
+  },
+  "nodeState": {
+    "features.lede": {
+      "deleted": true,
+      "hidden": false
+    },
+    "install.lede": {
+      "deleted": true,
+      "hidden": false
+    },
+    "section.install": {
+      "offset": {
+        "x": -5,
+        "y": 19
+      }
+    },
+    "install.requirement.0": {
+      "deleted": true,
+      "hidden": false
+    },
+    "install.requirement.1": {
+      "deleted": true,
+      "hidden": false
+    },
+    "footer.note": {
+      "deleted": true,
+      "hidden": false
+    },
+    "footer.link.features": {
+      "deleted": true,
+      "hidden": false
+    },
+    "footer.link.install": {
+      "deleted": true,
+      "hidden": false
+    },
+    "footer.link.try": {
+      "deleted": true,
+      "hidden": false
+    },
+    "footer.kanji": {
+      "deleted": true,
+      "hidden": false
+    },
+    "nav.features": {
+      "offset": {
+        "x": -12,
+        "y": 0
+      },
+      "deleted": true,
+      "hidden": false
+    },
+    "nav.install": {
+      "offset": {
+        "x": 9,
+        "y": 1
+      }
+    }
+  },
   "insertions": [],
   "dynamics": [],
   "assets": {

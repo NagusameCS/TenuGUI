@@ -54,6 +54,8 @@ class Editor {
     this._promptedDemoHint = false;
     this._revisionPreview = null;
     this._drag = null;
+    this._resize = null;
+    this._clickGuard = 0;
     this._starting = false;
   }
 
@@ -124,6 +126,15 @@ class Editor {
       </div>
 
       <div class="edit-toolbar" id="edit-toolbar" hidden></div>
+      <div class="resize-layer" id="resize-layer" hidden aria-hidden="true">
+        <span class="resize-handle" data-resize="e" title="Resize width"></span>
+        <span class="resize-handle" data-resize="s" title="Resize height"></span>
+        <span class="resize-handle" data-resize="se" title="Resize"></span>
+      </div>
+      <div class="snap-layer" id="snap-layer" hidden aria-hidden="true">
+        <span class="snap-guide" data-snap-x></span>
+        <span class="snap-guide" data-snap-y></span>
+      </div>
       <div class="format-bar" id="format-bar" hidden></div>
       <div class="ctx-menu" id="ctx-menu" hidden></div>
 
@@ -159,6 +170,8 @@ class Editor {
       exportBtn: $("#export-btn"),
       exitBtn: $('[data-ea="exit"]'),
       toolbar: $("#edit-toolbar"),
+      resize: $("#resize-layer"),
+      guides: $("#snap-layer"),
       format: $("#format-bar"),
       ctx: $("#ctx-menu"),
       inspector: $("#inspector"),
@@ -166,6 +179,10 @@ class Editor {
       width: $("#vs-width"),
       slider: $("#vs-slider"),
     };
+    this.ui.resize.addEventListener("pointerdown", (event) => {
+      const handle = event.target.closest("[data-resize]");
+      if (handle) this.beginResize(event, handle.dataset.resize);
+    });
     this.inspector = new Inspector(this);
     this.ui.inspectorBody.addEventListener("click", (event) => {
       if (event.target.closest("[data-help]")) this.showShortcuts();
@@ -322,7 +339,10 @@ class Editor {
     this.updateSelectionUi();
     if (!this._promptedDemoHint) {
       this._promptedDemoHint = true;
-      toast("Click to select · drag to move · double-click to edit.", { iconName: "cursor", timeout: 4600 });
+      toast("Click to select · drag to move · pull the handles to resize.", {
+        iconName: "cursor",
+        timeout: 4600,
+      });
     }
     this.announce("Editor mode active. Select an element to begin.");
   }
@@ -457,6 +477,7 @@ class Editor {
       hidden: !!ns.hidden,
       locked: !!ns.locked,
       offset: ns.offset || null,
+      size: ns.size || null,
       item: el.dataset.nodeItem || null,
       section: el.dataset.nodeSection || null,
       action: el.dataset.nodeAction || null,
@@ -502,7 +523,7 @@ class Editor {
     this.setTab("element");
     this.updateSelectionUi();
     if (this.inspector) this.inspector.render();
-    if (scroll) el.scrollIntoView({ block: "center", behavior: "smooth" });
+    if (scroll) el.scrollIntoView({ block: "center", behavior: "instant" });
     if (focus) el.focus({ preventScroll: true });
     const info = this.nodeInfo(id);
     this.announce(
@@ -527,6 +548,8 @@ class Editor {
     this.setSelectedVisual(null);
     if (!this.ui) return;
     this.ui.toolbar.hidden = true;
+    this.ui.resize.hidden = true;
+    this.hideSnapGuides();
     if (this.inspector) this.inspector.render();
     this.updateBar();
   }
@@ -547,6 +570,7 @@ class Editor {
     this.ui.toolbar.hidden = false;
     this.buildToolbar(info);
     this.positionToolbar(info);
+    this.positionResize(info);
     this.updateBar();
   }
 
@@ -630,6 +654,13 @@ class Editor {
           })}<span class="et-label">Reset position</span></button>`
         );
       }
+      if (info.size) {
+        actions.push(
+          `<button type="button" class="et-btn" data-et="reset-size" title="Reset size">${icon("reset", {
+            size: 15,
+          })}<span class="et-label">Reset size</span></button>`
+        );
+      }
       actions.push(
         `<button type="button" class="et-btn is-danger" data-et="delete" title="Delete element">${icon("trash", {
           size: 15,
@@ -676,6 +707,31 @@ class Editor {
     toolbar.style.top = `${top}px`;
   }
 
+  positionResize(info) {
+    if (!this.ui?.resize) return;
+    if (!info || !store.can("edit")) {
+      this.ui.resize.hidden = true;
+      return;
+    }
+    const rect = info.el.getBoundingClientRect();
+    if (rect.width < 4 || rect.height < 4) {
+      this.ui.resize.hidden = true;
+      return;
+    }
+    const handles = {
+      e: [rect.right, rect.top + rect.height / 2],
+      s: [rect.left + rect.width / 2, rect.bottom],
+      se: [rect.right, rect.bottom],
+    };
+    this.ui.resize.hidden = false;
+    for (const handle of this.ui.resize.querySelectorAll("[data-resize]")) {
+      const point = handles[handle.dataset.resize];
+      if (!point) continue;
+      handle.style.left = `${point[0]}px`;
+      handle.style.top = `${point[1]}px`;
+    }
+  }
+
   positionOverlays() {
     if (!this.active || this.preview) return;
     if (this._positionRaf) cancelAnimationFrame(this._positionRaf);
@@ -683,8 +739,148 @@ class Editor {
       this._positionRaf = null;
       if (!this.active || this.preview || !this.selectedId) return;
       const info = this.nodeInfo();
-      if (info) this.positionToolbar(info);
+      if (info) {
+        this.positionToolbar(info);
+        this.positionResize(info);
+      }
     });
+  }
+
+  showSnapGuides(x, y) {
+    if (!this.ui?.guides) return;
+    const vertical = this.ui.guides.querySelector("[data-snap-x]");
+    const horizontal = this.ui.guides.querySelector("[data-snap-y]");
+    vertical.hidden = x == null;
+    horizontal.hidden = y == null;
+    if (x != null) vertical.style.left = `${x}px`;
+    if (y != null) horizontal.style.top = `${y}px`;
+    this.ui.guides.hidden = x == null && y == null;
+  }
+
+  hideSnapGuides() {
+    if (this.ui?.guides) this.ui.guides.hidden = true;
+  }
+
+  snapTargets(el) {
+    const xs = [];
+    const ys = [];
+    const add = (list, value) => {
+      if (Number.isFinite(value)) list.push(value);
+    };
+    const site = document.getElementById("site");
+    if (site) {
+      const rect = site.getBoundingClientRect();
+      add(xs, rect.left);
+      add(xs, rect.left + rect.width / 2);
+      add(xs, rect.right);
+      add(ys, rect.top);
+      add(ys, rect.top + rect.height / 2);
+      add(ys, rect.bottom);
+    }
+    for (const node of $$('#site [data-node-pickable="true"]')) {
+      if (node === el || el.contains(node)) continue;
+      const rect = node.getBoundingClientRect();
+      if (rect.width < 2 || rect.height < 2) continue;
+      if (rect.bottom < 0 || rect.top > window.innerHeight) continue;
+      add(xs, rect.left);
+      add(xs, rect.left + rect.width / 2);
+      add(xs, rect.right);
+      add(ys, rect.top);
+      add(ys, rect.top + rect.height / 2);
+      add(ys, rect.bottom);
+    }
+    return { x: [...new Set(xs)], y: [...new Set(ys)] };
+  }
+
+  snapDelta(edges, lines, tolerance = 7) {
+    let best = null;
+    for (const line of lines) {
+      for (const edge of edges) {
+        const delta = line - edge;
+        if (Math.abs(delta) <= tolerance && (!best || Math.abs(delta) < Math.abs(best.delta))) {
+          best = { delta, line };
+        }
+      }
+    }
+    return best;
+  }
+
+  beginResize(event, direction) {
+    if (!this.active || this.preview || !this.selectedId || !store.can("edit")) return;
+    const el = this.getNode(this.selectedId);
+    if (!el || el.getAttribute("data-locked") === "true") return;
+    const rect = el.getBoundingClientRect();
+    this._resize = {
+      id: this.selectedId,
+      el,
+      direction,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      baseW: rect.width,
+      baseH: rect.height,
+      moved: false,
+    };
+    this.hideSnapGuides();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  handleResizeMove(event) {
+    const resize = this._resize;
+    if (!resize || event.pointerId !== resize.pointerId) return;
+    const dx = event.clientX - resize.startX;
+    const dy = event.clientY - resize.startY;
+    if (!resize.moved && Math.hypot(dx, dy) < 3) return;
+    if (!resize.moved) {
+      if (!store.begin("Element resized")) {
+        this._resize = null;
+        return;
+      }
+      resize.moved = true;
+      document.body.classList.add("is-resizing");
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    let width = Math.max(24, Math.round(resize.baseW + dx));
+    let height = Math.max(16, Math.round(resize.baseH + dy));
+    if (event.shiftKey && resize.direction === "se") {
+      const ratio = resize.baseW / Math.max(1, resize.baseH);
+      if (width / Math.max(1, resize.baseW) > height / Math.max(1, resize.baseH)) {
+        height = Math.round(width / ratio);
+      } else {
+        width = Math.round(height * ratio);
+      }
+    }
+    width = Math.min(4000, width);
+    height = Math.min(4000, height);
+    if (resize.direction.includes("e")) {
+      resize.el.style.width = `${width}px`;
+      resize.el.style.maxWidth = "none";
+    }
+    if (resize.direction.includes("s")) resize.el.style.height = `${height}px`;
+    const ns = store.state.nodeState[resize.id] || (store.state.nodeState[resize.id] = {});
+    ns.size = { ...(ns.size || {}) };
+    if (resize.direction.includes("e")) ns.size.width = width;
+    if (resize.direction.includes("s")) ns.size.height = height;
+    this.positionOverlays();
+  }
+
+  handleResizeEnd(event) {
+    const resize = this._resize;
+    if (!resize || (event.pointerId != null && event.pointerId !== resize.pointerId)) return;
+    this._resize = null;
+    document.body.classList.remove("is-resizing");
+    if (!resize.moved) return;
+    store.end();
+    const ns = store.state.nodeState?.[resize.id];
+    toast(
+      `Resized${ns?.size?.width ? ` to ${ns.size.width}px wide` : ""}${
+        ns?.size?.height ? ` · ${ns.size.height}px tall` : ""
+      }.`,
+      { iconName: "grip" }
+    );
+    this.positionOverlays();
   }
 
   /* ---------------------------------------------------------------- toolbar actions */
@@ -724,6 +920,10 @@ class Editor {
       case "reset-move":
         store.setNodeOffset(info.id, 0, 0);
         toast("Position reset.", { iconName: "reset" });
+        break;
+      case "reset-size":
+        store.setNodeSize(info.id, 0, 0);
+        toast("Size reset.", { iconName: "reset" });
         break;
       case "delete":
         this.deleteSelected();
@@ -1503,7 +1703,9 @@ class Editor {
       ["Select next element", "Tab"],
       ["Select element under pointer", "Click"],
       ["Move selected element", "Drag"],
-      ["Reset moved element", "Reset position (toolbar)"],
+      ["Snap to edges and centers", "Drag near a guide · Alt to ignore"],
+      ["Resize selected element", "Drag a handle · Shift to keep ratio"],
+      ["Reset move or size", "Toolbar reset"],
       ["Edit text / label", "Double-click · F2"],
       ["Finish text editing", "Escape · Done"],
       ["Bold · Italic · Underline", `${modKey()}+B · ${modKey()}+I · ${modKey()}+U`],
@@ -1583,6 +1785,7 @@ class Editor {
     const schedulePosition = throttleRaf(() => this.positionOverlays());
     window.addEventListener("scroll", () => {
       this.hideHover();
+      this.hideSnapGuides();
       schedulePosition();
     }, { passive: true, capture: true });
     window.addEventListener("resize", schedulePosition);
@@ -1595,6 +1798,7 @@ class Editor {
     document.addEventListener("pointermove", (event) => {
       if (!this.active || this.preview || this.editingId) return;
       if (event.pointerType === "touch") return;
+      if (event.target.closest("#inspector")) return;
       if (event.target.closest("#editor-ui, .dialog")) {
         this.hideHover();
         return;
@@ -1665,24 +1869,35 @@ class Editor {
     const id = node.dataset.nodeId;
     if (!id) return;
     const locked = node.getAttribute("data-locked") === "true";
+    this._clickGuard = performance.now() + 600;
+    setTimeout(() => {
+      if (performance.now() >= this._clickGuard) this._clickGuard = 0;
+    }, 650);
     event.preventDefault();
     event.stopPropagation();
     if (id !== this.selectedId) this.selectNode(id, { force: locked });
     if (locked) return;
     const offset = store.state.nodeState?.[id]?.offset || {};
+    const el = this.getNode(id) || node;
     this._drag = {
       id,
-      el: this.getNode(id) || node,
+      el,
       pointerId: event.pointerId,
       startX: event.clientX,
       startY: event.clientY,
       baseX: Number(offset.x) || 0,
       baseY: Number(offset.y) || 0,
+      rect: el.getBoundingClientRect(),
       moved: false,
     };
+    this.hideSnapGuides();
   }
 
   handleDragMove(event) {
+    if (this._resize) {
+      this.handleResizeMove(event);
+      return;
+    }
     const drag = this._drag;
     if (!drag || event.pointerId !== drag.pointerId) return;
     const dx = event.clientX - drag.startX;
@@ -1698,9 +1913,33 @@ class Editor {
     }
     event.preventDefault();
     event.stopPropagation();
-    const x = Math.round(drag.baseX + dx);
-    const y = Math.round(drag.baseY + dy);
+    let x = Math.round(drag.baseX + dx);
+    let y = Math.round(drag.baseY + dy);
+    let guideX = null;
+    let guideY = null;
+    if (!event.altKey && drag.rect) {
+      const targets = this.snapTargets(drag.el);
+      const left = drag.rect.left + dx;
+      const top = drag.rect.top + dy;
+      const sx = this.snapDelta(
+        [left, left + drag.rect.width / 2, left + drag.rect.width],
+        targets.x
+      );
+      const sy = this.snapDelta(
+        [top, top + drag.rect.height / 2, top + drag.rect.height],
+        targets.y
+      );
+      if (sx) {
+        x += sx.delta;
+        guideX = sx.line;
+      }
+      if (sy) {
+        y += sy.delta;
+        guideY = sy.line;
+      }
+    }
     drag.el.style.translate = `${x}px ${y}px`;
+    this.showSnapGuides(guideX, guideY);
     const ns = store.state.nodeState[drag.id] || (store.state.nodeState[drag.id] = {});
     if (!x && !y) delete ns.offset;
     else ns.offset = { x, y };
@@ -1708,13 +1947,18 @@ class Editor {
   }
 
   handleDragEnd(event) {
+    if (this._resize) {
+      this.handleResizeEnd(event);
+      return;
+    }
     const drag = this._drag;
     if (!drag || (event.pointerId != null && event.pointerId !== drag.pointerId)) return;
     this._drag = null;
     document.body.classList.remove("is-dragging");
+    this.hideSnapGuides();
     if (!drag.moved) return;
     store.end();
-    toast("Element moved — drag again to reposition, Ctrl+Z to undo.", { iconName: "grip" });
+    toast("Element moved — hold Alt to ignore guides, Ctrl+Z to undo.", { iconName: "grip" });
   }
 
   handleGlobalKey(event) {
@@ -1786,6 +2030,12 @@ class Editor {
 
   handleClick(event) {
     if (!this.active || this.preview) return;
+    if (this._clickGuard && performance.now() < this._clickGuard) {
+      this._clickGuard = 0;
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     if (event.target.closest("#editor-ui, .dialog, .toast-region")) return;
     if (this.editingEl && this.editingEl.contains(event.target)) {
       event.preventDefault();
@@ -1855,6 +2105,12 @@ class Editor {
       this.selectNode(node.dataset.nodeId);
     }
     this.showContextMenu(event.clientX, event.clientY);
+  }
+
+  previewNode(id) {
+    if (!this.active || this.preview || !id) return;
+    this.hoverId = id;
+    this.setHoverVisual(id);
   }
 
   hideHover() {

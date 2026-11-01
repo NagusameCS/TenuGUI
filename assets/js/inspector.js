@@ -154,6 +154,8 @@ export class Inspector {
       this.el.addEventListener("input", (event) => this.onInput(event));
       this.el.addEventListener("change", (event) => this.onChange(event));
       this.el.addEventListener("keydown", (event) => this.onKeydown(event));
+      this.el.addEventListener("pointerover", (event) => this.onPointerOver(event));
+      this.el.addEventListener("pointerout", (event) => this.onPointerOut(event));
     }
   }
 
@@ -480,7 +482,7 @@ export class Inspector {
             bpEntry.maxWidth != null ? '<span class="is-override">Local</span>' : ""
           }</div>
           <div class="range-row">
-            <input type="range" min="12" max="90" step="1" value="${
+            <input type="range" min="12" max="180" step="1" value="${
               bpEntry.maxWidth ?? 72
             }" data-live-prop="maxWidth" aria-label="Maximum text width" ${canEdit ? "" : "disabled"}>
             <span class="range-value">${bpEntry.maxWidth != null ? `${bpEntry.maxWidth}ch` : "auto"}</span>
@@ -1243,9 +1245,22 @@ export class Inspector {
   }
 
   /* ================================================================ events */
+  onPointerOver(event) {
+    const navBtn = event.target.closest("[data-nav-id]");
+    if (!navBtn || (event.relatedTarget && navBtn.contains(event.relatedTarget))) return;
+    this.editor.previewNode(navBtn.dataset.navId);
+  }
+
+  onPointerOut(event) {
+    const navBtn = event.target.closest("[data-nav-id]");
+    if (!navBtn || (event.relatedTarget && navBtn.contains(event.relatedTarget))) return;
+    this.editor.hideHover();
+  }
+
   onClick(event) {
     const navBtn = event.target.closest("[data-nav-id]");
     if (navBtn) {
+      this.editor.hideHover();
       this.editor.selectNode(navBtn.dataset.navId, { force: true, scroll: true });
       return;
     }

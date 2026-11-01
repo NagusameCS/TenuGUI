@@ -100,7 +100,7 @@ function styleRule(props, theme) {
     out.push(`text-align:${props.align}`);
   }
   if (props.maxWidth != null) {
-    const v = num(props.maxWidth, 8, 100);
+    const v = num(props.maxWidth, 8, 240);
     if (v != null) out.push(`max-width:${v}ch`);
   }
   if (props.underline != null) {
@@ -684,12 +684,18 @@ export function applyNodeOffsets(state) {
   const site = document.getElementById("site");
   if (!site) return;
   for (const [id, ns] of Object.entries(state.nodeState || {})) {
-    if (!ns?.offset) continue;
     const el = site.querySelector(`[data-node-id="${CSS.escape(id)}"]`);
     if (!el) continue;
-    const x = Number(ns.offset.x) || 0;
-    const y = Number(ns.offset.y) || 0;
-    el.style.translate = `${x}px ${y}px`;
+    if (ns.offset) {
+      const x = Number(ns.offset.x) || 0;
+      const y = Number(ns.offset.y) || 0;
+      el.style.translate = `${x}px ${y}px`;
+    }
+    if (ns.size?.width) {
+      el.style.width = `${Number(ns.size.width)}px`;
+      el.style.maxWidth = "none";
+    }
+    if (ns.size?.height) el.style.height = `${Number(ns.size.height)}px`;
   }
 }
 

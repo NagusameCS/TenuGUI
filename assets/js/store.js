@@ -733,6 +733,21 @@ class Store {
     });
   }
 
+  setNodeSize(id, width, height) {
+    if (!this.can("edit")) return false;
+    return this.apply("Element resized", (state) => {
+      const ns = state.nodeState[id] || (state.nodeState[id] = {});
+      const w = clamp(Math.round(Number(width) || 0), 0, 4000);
+      const h = clamp(Math.round(Number(height) || 0), 0, 4000);
+      const size = {};
+      if (w) size.width = w;
+      if (h) size.height = h;
+      if (size.width || size.height) ns.size = size;
+      else delete ns.size;
+      if (!Object.keys(ns).length) delete state.nodeState[id];
+    });
+  }
+
   /* structural items */
   itemInfo(section) {
     return ITEM_SECTIONS[section] || null;

@@ -199,7 +199,7 @@ An MCP client can fill `html` with sanitised markup; the box remains fixed at th
 
 `bookmarklet.html` provides a draggable browser button and needs no server. It embeds the generated `assets/js/anywhere-source.js` inside the bookmarklet, so the editor is fully self-contained and works offline. No backend, extension or hosting is involved.
 
-Once launched, the editor lets you select elements, edit text inline, change typography, colours, spacing and links, replace images, drag elements, duplicate, hide or delete them, undo/redo, and export the edited HTML. It uses the page's own CSS and assets and does not inject TenuGUI textures or state. Sites with a restrictive content security policy may block bookmarklets.
+Once launched, the editor lets you select elements, edit text inline, change typography, colours, spacing and links, replace images, drag elements with snap alignment, resize them with edge and corner handles, duplicate, hide or delete them, undo/redo, and export the edited HTML. It uses the page's own CSS and assets and does not inject TenuGUI textures or state. Sites with a restrictive content security policy may block bookmarklets.
 
 ## Local MCP server
 
