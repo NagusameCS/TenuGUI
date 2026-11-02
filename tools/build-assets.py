@@ -179,11 +179,10 @@ def build_marks():
         + text("手", 300, 256, 365, DARK, anchor="middle")[0]
     )
     save_svg("mark-tile-dark.svg", svg(512, 512, tile_dark))
-    # favicon-sized line-art mark, transparent and thickened for small sizes.
-    # Vermilion keeps the outline visible on both paper and ink browser chrome.
+    # Solid vermilion tile for browser chrome: the outline mark turns to mush at 16px.
     favicon_mark = (
-        f'<rect x="62" y="62" width="388" height="388" rx="18" fill="none" stroke="{LAVENDER}" stroke-width="30"/>'
-        + text("手", 268, 256, 352, LAVENDER, anchor="middle")[0]
+        f'<rect width="512" height="512" rx="112" fill="{LAVENDER}"/>'
+        + text("手", 300, 256, 365, PAPER, anchor="middle")[0]
     )
     save_svg("mark-favicon.svg", svg(512, 512, favicon_mark))
 
