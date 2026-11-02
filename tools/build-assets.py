@@ -179,10 +179,10 @@ def build_marks():
         + text("手", 300, 256, 365, DARK, anchor="middle")[0]
     )
     save_svg("mark-tile-dark.svg", svg(512, 512, tile_dark))
-    # Solid vermilion tile for browser chrome: the outline mark turns to mush at 16px.
+    # Monochrome tile for browser chrome: the outline mark turns to mush at 16px.
     favicon_mark = (
-        f'<rect width="512" height="512" rx="112" fill="{LAVENDER}"/>'
-        + text("手", 300, 256, 365, PAPER, anchor="middle")[0]
+        '<rect width="512" height="512" rx="112" fill="#000000"/>'
+        + text("手", 300, 256, 365, "#FFFFFF", anchor="middle")[0]
     )
     save_svg("mark-favicon.svg", svg(512, 512, favicon_mark))
 

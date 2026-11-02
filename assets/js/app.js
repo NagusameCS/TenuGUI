@@ -34,10 +34,10 @@ function updateFavicon() {
     if (!link) return;
     link.setAttribute("href", inst?.src || fallback);
   };
-  set("icon", "32x32", "assets/img/brand/favicon-32.png?v=32");
-  set("icon", "16x16", "assets/img/brand/favicon-16.png?v=32");
-  set("shortcut icon", "", "assets/img/brand/favicon.ico?v=32");
-  set("apple-touch-icon", "180x180", "assets/img/brand/favicon-180.png?v=32");
+  set("icon", "32x32", "assets/img/brand/favicon-32.png?v=33");
+  set("icon", "16x16", "assets/img/brand/favicon-16.png?v=33");
+  set("shortcut icon", "", "assets/img/brand/favicon.ico?v=33");
+  set("apple-touch-icon", "180x180", "assets/img/brand/favicon-180.png?v=33");
 }
 
 function updateMetaTheme() {
